@@ -1,5 +1,5 @@
 /* Offline cache so the banner works even with bad signal at the venue */
-var CACHE = "sophie-banner-v3";
+var CACHE = "sophie-banner-v4";
 var FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png", "./icon-maskable-512.png", "./sophie-banner-ios.html"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(FILES); }).then(function () { return self.skipWaiting(); }));

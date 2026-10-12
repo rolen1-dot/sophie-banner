@@ -263,12 +263,12 @@ var BGGRADS=[
  ["Gold","linear-gradient(160deg,#1a1033 0%,#3a2a12 100%)",["#1a1033","#3a2a12"]]];
 var COLORS=["#ffffff","#ff7bac","#ff2d55","#ff9500","#ffcc00","#34c759","#30b0c7","#007aff","#af52de","#5e2b97","#1c1c1e"];
 var BGCOLORS=["#ff7bac","#ffb3d1","#ff2d55","#ffcc00","#7cc8ff","#34c759","#af52de","#120a2e","#000000","#ffffff"];
-var L1MSGS=["🎓 Sophie ✨","🎓 Congratulations Sophie! 🎉","We love you Sophie! ❤️","Go Sophie Go! ⭐","So proud of you Sophie! 🌈","Yay Sophie! 🥳","Sophie you did it! 🏆","Hi Sophie! 👋 We're here! 💖"];
-var L2MSGS=["Class of 2026","We love you! 💖","Kindergarten Grad 🎓","So proud of you!","Go Sophie! ⭐","Congratulations! 🎉"];
+var L1MSGS=["🎓 Sophie","🎓 Sophie ✨","🎓 Congratulations Sophie! 🎉","We love you Sophie! ❤️","Go Sophie Go! ⭐","So proud of you Sophie! 🌈","Yay Sophie! 🥳","Sophie you did it! 🏆","Hi Sophie! 👋 We're here! 💖"];
+var L2MSGS=["Congrats ❤️✨","Class of 2026","We love you! 💖","Kindergarten Grad 🎓","So proud of you!","Go Sophie! ⭐","Congratulations! 🎉"];
 
-var DEF={v:3,nLines:1,
- l1:{text:"🎓 Sophie ✨",size:100,color:"#ffffff",weight:900},
- l2:{text:"Class of 2026",size:42,color:"#ffffff",weight:800},
+var DEF={v:4,nLines:2,
+ l1:{text:"🎓 Sophie",size:100,color:"#ffffff",weight:900},
+ l2:{text:"Congrats ❤️✨",size:48,color:"#ffffff",weight:800},
  font:"rounded",grad:"none",shimmer:false,shadow:true,outline:false,outlineColor:"#c2185b",glow:false,spacing:0,led:false,size:100,
  photo:{id:null,shape:"circle",ring:true,ringColor:"#ffffff",ringW:5,size:110,pos:"left",zoom:1,px:0,py:0,ar:1},
  bg:{type:"color",color:"#ff7bac",grad:0,dim:25},
@@ -277,7 +277,7 @@ function merge(base,o){var r=clone(base);if(!o||typeof o!=="object")return r;
   for(var k in r){if(!(k in o))continue;if(r[k]&&typeof r[k]==="object"&&!Array.isArray(r[k])){for(var j in r[k])if(o[k]&&j in o[k])r[k][j]=o[k][j];}else r[k]=o[k];}return r;}
 var STARTERS=[
  ["Sophie Pink",{}],
- ["Class of 2026",{nLines:2,l2:{text:"Class of 2026",size:42,color:"#ffffff",weight:800},fx:{confetti:true,sparkles:true}}],
+ ["Class of 2026",{nLines:2,l1:{text:"🎓 Sophie ✨",size:100,color:"#ffffff",weight:900},l2:{text:"Class of 2026",size:42,color:"#ffffff",weight:800},fx:{confetti:true,sparkles:true}}],
  ["Rainbow Party",{l1:{text:"Yay Sophie! 🥳",size:100,color:"#ffffff",weight:900},grad:"rainbow",shimmer:true,bg:{type:"gradient",grad:4},fx:{confetti:true,sparkles:true},shadow:false,glow:true}],
  ["Gold Star",{l1:{text:"⭐ Go Sophie! ⭐",size:100,color:"#ffcc00",weight:900},grad:"gold",bg:{type:"gradient",grad:5},font:"serif",fx:{confetti:false,sparkles:true},glow:true,shadow:false}],
  ["LED Ticker",{l1:{text:"🎓 CONGRATULATIONS SOPHIE! 🎉",size:100,color:"#ff2d55",weight:700},font:"mono",led:true,glow:true,shadow:false,bg:{type:"color",color:"#000000"},fx:{confetti:false},scroll:true}],
@@ -285,8 +285,11 @@ var STARTERS=[
  ["Balloon Sky",{nLines:2,l1:{text:"Sophie 🎈",size:100,color:"#ffffff",weight:900},l2:{text:"Kindergarten Grad 🎓",size:40,color:"#1c3d7a",weight:800},bg:{type:"gradient",grad:2},fx:{confetti:false,balloons:true},outline:true,outlineColor:"#1c3d7a",shadow:false}]];
 function starter(i){return merge(DEF,STARTERS[i][1]);}
 
-var KEY="sophieBanner.v3",DKEY="sophieBanner.designs.v1";
-try{localStorage.removeItem("sophieBanner.v1");localStorage.removeItem("sophieBanner.v2")}catch(e){}
+var KEY="sophieBanner.v4",DKEY="sophieBanner.designs.v1";
+try{localStorage.removeItem("sophieBanner.v1");localStorage.removeItem("sophieBanner.v2");
+  /* v3 -> v4: new default look; keep the old customisation (incl. photo) as a saved design instead of discarding it */
+  var old3=localStorage.getItem("sophieBanner.v3");if(old3){var o3=JSON.parse(old3),dl=JSON.parse(localStorage.getItem("sophieBanner.designs.v1")||"[]");
+    dl.push({n:"My previous design",s:o3,t:Date.now()});localStorage.setItem("sophieBanner.designs.v1",JSON.stringify(dl));localStorage.removeItem("sophieBanner.v3");}}catch(e){}
 var S;try{S=merge(DEF,JSON.parse(localStorage.getItem(KEY)||"null"))}catch(e){S=clone(DEF)}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function getD(){try{return JSON.parse(localStorage.getItem(DKEY)||"[]")||[]}catch(e){return[]}}
@@ -529,7 +532,7 @@ function textRow(path,ph){var i=el("input",{type:"text",cls:"tin",maxlength:"120
 function chips(list,path){var w=el("div",{cls:"chips"});list.forEach(function(t){w.appendChild(el("button",{type:"button",cls:"chip",text:t,onclick:function(){tick();sp(path,t);commit();buildPane();}}))});
   return el("div",{cls:"row col"},[w]);}
 function lineGroup(n){var p="l"+n;return [
-  group("Line "+n+(n===1?" · main":" · subtitle"),[textRow(p+".text",n===1?"🎓 Sophie ✨":"Class of 2026"),
+  group("Line "+n+(n===1?" · main":" · subtitle"),[textRow(p+".text",n===1?"🎓 Sophie":"Congrats ❤️✨"),
     slider("Size",p+".size",n===1?40:15,n===1?100:100,1,function(v){return v+"%"}),
     el("div",{cls:"row col"},[el("span",{cls:"lbl",text:"Weight"}),seg([[500,"Regular"],[700,"Bold"],[800,"Heavy"],[900,"Black"]],p+".weight")]),
     el("div",{cls:"row col"},[el("span",{cls:"lbl",text:"Colour"}),swatches(p+".color",COLORS)])],
